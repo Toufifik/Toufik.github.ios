@@ -8,11 +8,11 @@ const REGIMENTS = {
         constructions: [
 
             {
-                nom: "Construction Alpha",
-                contenu: `FICHE DE CONSTRUCTION
+                nom: "Grappin",
+                contenu: `new reco.txt
 ========================
 
-Construction Alpha
+Grappin
 
 Matériel nécessaire :
 - Élément 1
