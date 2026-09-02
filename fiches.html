@@ -1,84 +1,262 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fiches de recrutement</title>
-<link rel="stylesheet" href="style.css">
-<style>
-.copy-box{margin-top:25px;padding:22px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.04)}
-.discord-preview{white-space:pre-wrap;background:#111820;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:16px;line-height:1.5;font-family:Arial,sans-serif}
-.copy-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.copy-success{display:none;margin-top:10px;font-weight:700}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiches de recrutement</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .copy-box{margin-top:25px;padding:22px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.04)}
+    .discord-preview{white-space:pre-wrap;background:#111820;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:16px;line-height:1.5;font-family:Arial,sans-serif}
+    .copy-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .copy-success{display:none;margin-top:10px;font-weight:700}
+    .save-message{display:none;margin-top:15px;padding:12px;border-radius:10px}
+    .save-message.error{display:block;background:rgba(180,40,40,.15);color:#ff9999}
+  </style>
 </head>
 <body>
-<header><nav class="nav">
-<div class="logo">RÉGIMENTS</div>
-<a href="index.html">Accueil</a><a href="theorique.html">Théorique</a><a href="construction.html">Construction</a><a href="notation.html">Notation</a>
-<a href="fiches.html" class="active">Fiches</a><a href="anciens-recrutements.html">Anciens recrutements</a>
-</nav></header>
+<header>
+  <nav class="nav">
+    <div class="logo">RÉGIMENTS</div>
+    <a href="index.html">Accueil</a>
+    <a href="theorique.html">Théorique</a>
+    <a href="construction.html">Construction</a>
+    <a href="notation.html">Notation</a>
+    <a href="fiches.html" class="active">Fiches</a>
+    <a href="anciens-recrutements.html">Anciens recrutements</a>
+  </nav>
+</header>
+
 <main class="container">
-<h1>Fiche de recrutement</h1>
-<p>Crée une nouvelle fiche. Elle sera enregistrée en ligne et visible par tous les utilisateurs du site.</p>
-<section class="card">
-<div class="form-grid">
-<label>Nom<input id="nom" type="text" placeholder="Nom du candidat"></label>
-<label>Matricule<input id="matricule" type="text" placeholder="Ex : 41-025"></label>
-<label>Steam ID<input id="steam" type="text" placeholder="Steam ID"></label>
-<label>Régiment<select id="regiment"><option value="">Sélectionner</option><option>41st</option><option>212th</option><option>104th</option><option>408th</option><option>65th</option><option>327th</option><option>501st</option></select></label>
-<label>Date<input id="date" type="date"></label>
-<label>Note théorique /100<input id="theorique" type="number" min="0" max="100"></label>
-<label>Note pratique /100<input id="pratique" type="number" min="0" max="100"></label>
-</div>
-<div class="score-box"><h2>Résultat</h2><p>Note finale : <strong id="total">—</strong> / 100</p><p>Décision : <strong id="decision">—</strong></p></div>
-<div class="actions"><button id="save" type="button">💾 Enregistrer</button><button id="reset" type="button">Réinitialiser</button></div>
-</section>
-<section class="card copy-box">
-<h2>📋 Copier / coller pour Discord</h2>
-<div id="discordPreview" class="discord-preview"></div>
-<div class="copy-actions"><button id="copyDiscord" type="button">📋 Copier / coller</button></div>
-<div id="copySuccess" class="copy-success">✅ Fiche copiée !</div>
-</section>
+  <h1>Fiche de recrutement</h1>
+  <p>Crée une nouvelle fiche. Elle sera enregistrée en ligne et visible par tous les utilisateurs.</p>
+
+  <section class="card">
+    <div class="form-grid">
+      <label>Nom
+        <input id="nom" type="text" placeholder="Nom du candidat">
+      </label>
+
+      <label>Matricule
+        <input id="matricule" type="text" placeholder="Ex : 41-025">
+      </label>
+
+      <label>Steam ID
+        <input id="steam" type="text" placeholder="Steam ID">
+      </label>
+
+      <label>Régiment
+        <select id="regiment">
+          <option value="">Sélectionner</option>
+          <option>41st</option>
+          <option>212th</option>
+          <option>104th</option>
+          <option>408th</option>
+          <option>65th</option>
+          <option>327th</option>
+          <option>501st</option>
+        </select>
+      </label>
+
+      <label>Date
+        <input id="date" type="date">
+      </label>
+
+      <label>Note théorique /100
+        <input id="theorique" type="number" min="0" max="100" placeholder="0 à 100">
+      </label>
+
+      <label>Note pratique /100
+        <input id="pratique" type="number" min="0" max="100" placeholder="0 à 100">
+      </label>
+    </div>
+
+    <div class="score-box">
+      <h2>Résultat</h2>
+      <p>Note finale : <strong id="total">—</strong> / 100</p>
+      <p>Décision : <strong id="decision">—</strong></p>
+    </div>
+
+    <div class="actions">
+      <button id="save" type="button">💾 Enregistrer le recrutement</button>
+      <button id="reset" type="button">Réinitialiser</button>
+    </div>
+
+    <div id="saveMessage" class="save-message"></div>
+  </section>
+
+  <section class="card copy-box">
+    <h2>📋 Copier / coller pour Discord</h2>
+    <p>Le modèle se remplit automatiquement avec les informations de la fiche.</p>
+    <div id="discordPreview" class="discord-preview"></div>
+
+    <div class="copy-actions">
+      <button id="copyDiscord" type="button">📋 Copier / coller</button>
+    </div>
+
+    <div id="copySuccess" class="copy-success">✅ Fiche copiée ! Tu peux maintenant la coller sur Discord.</div>
+  </section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-const SUPABASE_URL="https://tziymtfcvpvbgfwpfiyb.supabase.co";
-const SUPABASE_KEY="sb_publishable_FT2l5rP1bmjxBBn6YAX6Kg_E5wBeiWV";
-const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id);
-const fmt=v=>v===undefined||v===null||v===""?"—":v;
-function calc(){
- const has=$("theorique").value!==""&&$("pratique").value!=="";
- const total=has?(Number($("theorique").value)+Number($("pratique").value))/2:null;
- const decision=total===null?"—":total>=70?"ACCEPTÉ":"REFUSÉ";
- $("total").textContent=total===null?"—":total;
- $("decision").textContent=decision;
- $("discordPreview").textContent=`**📋 FICHE DE RECRUTEMENT**
+const SUPABASE_URL = "https://tziymtfcvpvbgfwpfiyb.supabase.co";
+const SUPABASE_KEY = "sb_publishable_FT2l5rP1bmjxBBn6YAX6Kg_E5wBeiWV";
+const API_URL = SUPABASE_URL + "/rest/v1/recrutements";
 
-**Nom :** ${fmt($("nom").value)}
-**Matricule :** ${fmt($("matricule").value)}
-**Steam ID :** ${fmt($("steam").value)}
-**Régiment :** ${fmt($("regiment").value)}
-**Date :** ${fmt($("date").value)}
+const $ = id => document.getElementById(id);
 
-**Note théorique :** ${fmt($("theorique").value)}/100
-**Note pratique :** ${fmt($("pratique").value)}/100
-**Note finale :** ${total===null?"—":total}/100
-
-**Décision :** ${decision}`;
- return {total,decision};
+function formatNumber(value) {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
 }
-document.querySelectorAll("input,select").forEach(e=>e.addEventListener("input",calc));
-$("reset").onclick=()=>{document.querySelectorAll("input").forEach(e=>e.value="");$("regiment").value="";calc()};
-$("copyDiscord").onclick=async()=>{try{await navigator.clipboard.writeText($("discordPreview").textContent)}catch(e){const t=document.createElement("textarea");t.value=$("discordPreview").textContent;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}$("copySuccess").style.display="block";setTimeout(()=>$("copySuccess").style.display="none",2500)};
-$("save").onclick=async()=>{
- if(!$("nom").value.trim()||!$("matricule").value.trim()||!$("steam").value.trim()||!$("regiment").value||!$("date").value||$("theorique").value===""||$("pratique").value===""){alert("Merci de remplir tous les champs.");return}
- const c=calc();
- const {error}=await supabaseClient.from("recrutements").insert({nom:$("nom").value.trim(),matricule:$("matricule").value.trim(),steam:$("steam").value.trim(),regiment:$("regiment").value,date:$("date").value,theorique:Number($("theorique").value),pratique:Number($("pratique").value),total:c.total,decision:c.decision});
- if(error){console.error(error);alert("Erreur lors de l'enregistrement : "+error.message);return}
- window.location.href="anciens-recrutements.html";
-};
-calc();
+
+function getResult() {
+  const hasNotes = $("theorique").value !== "" && $("pratique").value !== "";
+  if (!hasNotes) return { total: null, decision: "—" };
+
+  const theorique = Number($("theorique").value);
+  const pratique = Number($("pratique").value);
+  const total = (theorique + pratique) / 2;
+
+  return {
+    total,
+    decision: total >= 70 ? "ACCEPTÉ" : "REFUSÉ"
+  };
+}
+
+function display(value) {
+  return value === undefined || value === null || value === "" ? "—" : value;
+}
+
+function updatePreview() {
+  const result = getResult();
+
+  $("total").textContent = result.total === null ? "—" : formatNumber(result.total);
+  $("decision").textContent = result.decision;
+
+  $("discordPreview").textContent =
+`**📋 FICHE DE RECRUTEMENT**
+
+**Nom :** ${display($("nom").value)}
+**Matricule :** ${display($("matricule").value)}
+**Steam ID :** ${display($("steam").value)}
+**Régiment :** ${display($("regiment").value)}
+**Date :** ${display($("date").value)}
+
+**Note théorique :** ${display($("theorique").value)}/100
+**Note pratique :** ${display($("pratique").value)}/100
+**Note finale :** ${result.total === null ? "—" : formatNumber(result.total)}/100
+
+**Décision :** ${result.decision}`;
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (error) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+  }
+}
+
+document.querySelectorAll("input, select").forEach(element => {
+  element.addEventListener("input", updatePreview);
+  element.addEventListener("change", updatePreview);
+});
+
+$("reset").addEventListener("click", () => {
+  document.querySelectorAll("input").forEach(input => input.value = "");
+  $("regiment").value = "";
+  $("saveMessage").style.display = "none";
+  updatePreview();
+});
+
+$("copyDiscord").addEventListener("click", async () => {
+  await copyText($("discordPreview").textContent);
+  $("copySuccess").style.display = "block";
+  setTimeout(() => $("copySuccess").style.display = "none", 2500);
+});
+
+$("save").addEventListener("click", async () => {
+  const fields = {
+    nom: $("nom").value.trim(),
+    matricule: $("matricule").value.trim(),
+    steam: $("steam").value.trim(),
+    regiment: $("regiment").value,
+    date: $("date").value,
+    theorique: $("theorique").value,
+    pratique: $("pratique").value
+  };
+
+  if (!fields.nom || !fields.matricule || !fields.steam || !fields.regiment ||
+      !fields.date || fields.theorique === "" || fields.pratique === "") {
+    alert("Merci de remplir tous les champs.");
+    return;
+  }
+
+  const theorique = Number(fields.theorique);
+  const pratique = Number(fields.pratique);
+
+  if (theorique < 0 || theorique > 100 || pratique < 0 || pratique > 100) {
+    alert("Les notes doivent être comprises entre 0 et 100.");
+    return;
+  }
+
+  const total = (theorique + pratique) / 2;
+  const decision = total >= 70 ? "ACCEPTÉ" : "REFUSÉ";
+
+  $("save").disabled = true;
+  $("save").textContent = "⏳ Enregistrement...";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({
+        nom: fields.nom,
+        matricule: fields.matricule,
+        steam: fields.steam,
+        regiment: fields.regiment,
+        date: fields.date,
+        theorique,
+        pratique,
+        total,
+        decision
+      })
+    });
+
+    if (!response.ok) {
+      let details = "";
+      try {
+        const data = await response.json();
+        details = data.message || data.error_description || data.hint || "";
+      } catch (_) {}
+      throw new Error(details || "Le serveur Supabase a refusé l'enregistrement.");
+    }
+
+    window.location.href = "anciens-recrutements.html";
+  } catch (error) {
+    console.error(error);
+    $("saveMessage").textContent = "❌ " + error.message;
+    $("saveMessage").className = "save-message error";
+  } finally {
+    $("save").disabled = false;
+    $("save").textContent = "💾 Enregistrer le recrutement";
+  }
+});
+
+updatePreview();
 </script>
 </body>
 </html>
