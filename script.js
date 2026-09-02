@@ -1,297 +1,416 @@
-const REGIMENTS = {
-    "41st": {
-        constructions: [
-            "Construction Alpha",
-            "Construction Bravo"
-        ],
-        notation: [
-            {
-                nom: "Traque",
-                coefficient: 2,
-                max: 20
-            },
-            {
-                nom: "Reconnaissance",
-                coefficient: 3,
-                max: 20
-            }
-        ]
-    },
+// =====================================================
+// RÉGIMENTS
+// =====================================================
 
-    "65st": {
-        constructions: [
-            "Construction Delta",
-            "Construction Echo"
-        ],
-        notation: [
-            {
-                nom: "Extraction VIP",
-                coefficient: 3,
-                max: 20
-            },
-            {
-                nom: "CQB",
-                coefficient: 4,
-                max: 20
-            }
-        ]
-    }
+const REGIMENTS = {
+  "41st": {
+    constructions: [
+      "Construction Alpha",
+      "Construction Bravo"
+    ],
+
+    notation: [
+      { nom: "Traque", coefficient: 2, max: 20 },
+      { nom: "Reconnaissance", coefficient: 3, max: 20 }
+    ]
+  },
+
+  "65st": {
+    constructions: [
+      "Construction Delta",
+      "Construction Echo"
+    ],
+
+    notation: [
+      { nom: "Extraction VIP", coefficient: 3, max: 20 },
+      { nom: "CQB", coefficient: 4, max: 20 }
+    ]
+  }
 };
 
 
-// ================================
-// PAGE CONSTRUCTION
-// ================================
+// =====================================================
+// DOCUMENTS THÉORIQUES
+// =====================================================
+
+const THEORIE = [
+  {
+    titre: "Introduction",
+    texte: "Ajoute ici ton document théorique et les notions à connaître."
+  },
+
+  {
+    titre: "Procédures",
+    texte: "Ajoute ici les procédures générales et consignes."
+  },
+
+  {
+    titre: "Préparation",
+    texte: "Ajoute ici les éléments à vérifier avant une évaluation."
+  }
+];
+
+
+// =====================================================
+// OUTILS
+// =====================================================
+
+function q(id) {
+  return document.getElementById(id);
+}
+
+
+function esc(v) {
+  return String(v)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+
+// =====================================================
+// LISTE DES RÉGIMENTS
+// =====================================================
+
+function fillSelect(select) {
+
+  if (!select) return;
+
+  Object.keys(REGIMENTS).forEach(name => {
+
+    const option = document.createElement("option");
+
+    option.value = name;
+    option.textContent = name;
+
+    select.appendChild(option);
+
+  });
+}
+
+
+// =====================================================
+// CONSTRUCTIONS
+// =====================================================
 
 function renderConstruction() {
 
-    const select = document.getElementById("constructionRegiment");
-    const list = document.getElementById("constructionList");
+  const select = q("regimentSelect");
+  const list = q("constructionList");
+  const title = q("selectedRegiment");
 
-    if (!select || !list) return;
+  if (!select || !list) return;
 
-    const regiment = select.value;
+  list.innerHTML = "";
 
-    const data = REGIMENTS[regiment];
+  const regiment = select.value;
 
-    if (!data) return;
+  if (!regiment) {
 
-    list.innerHTML = "";
+    title.textContent = "Aucun régiment sélectionné";
 
-    data.constructions.forEach((construction, index) => {
+    return;
+  }
 
-        const div = document.createElement("div");
+  title.textContent = regiment;
 
-        div.className = "item";
+  const constructions = REGIMENTS[regiment].constructions;
 
-        div.innerHTML = `
-            <strong>Construction ${index + 1}</strong>
-            <br>
-            <span class="muted">${construction}</span>
-            <br><br>
+  constructions.forEach((construction, index) => {
 
-            <button type="button" onclick="downloadConstruction('${construction}')">
-                ⬇️ Télécharger
-            </button>
-        `;
+    const element = document.createElement("div");
 
-        list.appendChild(div);
-    });
+    element.className = "item";
+
+    element.innerHTML = `
+      <strong>Construction ${index + 1}</strong>
+
+      <br>
+
+      <span class="muted">
+        ${esc(construction)}
+      </span>
+
+      <br><br>
+
+      <button onclick="downloadFile('${esc(construction)}')">
+        ⬇️ Télécharger
+      </button>
+    `;
+
+    list.appendChild(element);
+
+  });
+
 }
 
 
-// ================================
+// =====================================================
 // TÉLÉCHARGEMENT
-// ================================
+// =====================================================
 
-function downloadConstruction(nom) {
+function downloadFile(text) {
 
-    const contenu =
-`FICHE DE CONSTRUCTION
+  const contenu = text;
 
-${nom}
+  const blob = new Blob(
+    [contenu],
+    {
+      type: "text/plain;charset=utf-8"
+    }
+  );
 
-================================
+  const url = URL.createObjectURL(blob);
 
-Matériel nécessaire :
+  const lien = document.createElement("a");
 
-- À compléter
-- À compléter
-- À compléter
+  lien.href = url;
 
-Procédure :
+  lien.download = text + ".txt";
 
-1. À compléter
-2. À compléter
-3. À compléter
+  document.body.appendChild(lien);
 
-Notes :
+  lien.click();
 
-À compléter
-`;
+  lien.remove();
 
+  URL.revokeObjectURL(url);
 
-    const fichier = new Blob(
-        [contenu],
-        {
-            type: "text/plain;charset=utf-8"
-        }
-    );
-
-    const url = URL.createObjectURL(fichier);
-
-    const lien = document.createElement("a");
-
-    lien.href = url;
-    lien.download = nom + ".txt";
-
-    document.body.appendChild(lien);
-
-    lien.click();
-
-    document.body.removeChild(lien);
-
-    URL.revokeObjectURL(url);
 }
 
 
-// ================================
-// PAGE NOTATION
-// ================================
+// =====================================================
+// NOTATION
+// =====================================================
 
 function renderNotation() {
 
-    const select = document.getElementById("notationRegiment");
-    const list = document.getElementById("notationList");
+  const select = q("regimentSelect");
+  const list = q("criteriaList");
+  const title = q("selectedRegiment");
+  const finalScore = q("finalScore");
 
-    if (!select || !list) return;
+  if (!select || !list) return;
 
-    const regiment = select.value;
+  list.innerHTML = "";
 
-    const data = REGIMENTS[regiment];
+  const regiment = select.value;
 
-    if (!data) return;
+  if (!regiment) {
 
-    list.innerHTML = "";
+    title.textContent = "Aucun régiment sélectionné";
 
-    data.notation.forEach((critere) => {
+    finalScore.textContent = "—";
 
-        const div = document.createElement("div");
+    return;
+  }
 
-        div.className = "item";
+  title.textContent = regiment;
 
-        div.innerHTML = `
-            <strong>${critere.nom}</strong>
-            <br>
-            <span class="muted">
-                Coefficient : ${critere.coefficient}
-            </span>
-            <br><br>
+  const criteria = REGIMENTS[regiment].notation;
 
-            <label>
-                Note / ${critere.max}
-            </label>
+  criteria.forEach((criterion, index) => {
 
-            <input
-                type="number"
-                min="0"
-                max="${critere.max}"
-                value="0"
-                class="notation-input"
-            >
-        `;
+    const element = document.createElement("div");
 
-        list.appendChild(div);
+    element.className = "row";
+
+    element.innerHTML = `
+      <div>
+        <strong>
+          ${esc(criterion.nom)}
+        </strong>
+
+        <div class="muted">
+          Maximum : ${criterion.max}/20
+        </div>
+      </div>
+
+      <div class="coeff">
+        Coef. ×${criterion.coefficient}
+      </div>
+
+      <input
+        class="score"
+        type="number"
+        min="0"
+        max="${criterion.max}"
+        step="0.5"
+        data-index="${index}"
+        placeholder="0"
+      >
+    `;
+
+    list.appendChild(element);
+
+  });
+
+  list
+    .querySelectorAll("input")
+    .forEach(input => {
+
+      input.addEventListener("input", calculateScore);
+
     });
 
-    calculateNotation();
+  calculateScore();
 
-    list.querySelectorAll(".notation-input").forEach(input => {
-
-        input.addEventListener("input", calculateNotation);
-
-    });
 }
 
 
-// ================================
-// CALCUL NOTE
-// ================================
+// =====================================================
+// CALCUL DE LA NOTE
+// =====================================================
 
-function calculateNotation() {
+function calculateScore() {
 
-    const select = document.getElementById("notationRegiment");
-    const list = document.getElementById("notationList");
-    const result = document.getElementById("notationResult");
+  const select = q("regimentSelect");
+  const finalScore = q("finalScore");
 
-    if (!select || !list || !result) return;
+  if (
+    !select ||
+    !finalScore ||
+    !REGIMENTS[select.value]
+  ) {
+    return;
+  }
 
-    const data = REGIMENTS[select.value];
+  const criteria =
+    REGIMENTS[select.value].notation;
 
-    if (!data) return;
+  const inputs =
+    document.querySelectorAll(
+      "#criteriaList input"
+    );
 
-    const inputs =
-        list.querySelectorAll(".notation-input");
+  let total = 0;
 
-    let total = 0;
-    let totalCoefficient = 0;
+  let totalCoefficients = 0;
 
-    data.notation.forEach((critere, index) => {
 
-        let note = Number(inputs[index].value);
+  criteria.forEach((criterion, index) => {
 
-        if (isNaN(note)) {
-            note = 0;
-        }
+    const note = Math.max(
+      0,
+      Math.min(
+        Number(inputs[index]?.value) || 0,
+        criterion.max
+      )
+    );
 
-        if (note < 0) {
-            note = 0;
-        }
+    const noteSur20 =
+      (note / criterion.max) * 20;
 
-        if (note > critere.max) {
-            note = critere.max;
-        }
+    total +=
+      noteSur20 * criterion.coefficient;
 
-        total += note * critere.coefficient;
+    totalCoefficients +=
+      criterion.coefficient;
 
-        totalCoefficient += critere.coefficient;
-    });
+  });
 
-    const score =
-        totalCoefficient > 0
-            ? total / totalCoefficient
-            : 0;
 
-    result.textContent =
-        "Note finale : " + score.toFixed(2) + " / 20";
+  const result =
+    totalCoefficients
+      ? total / totalCoefficients
+      : 0;
+
+
+  finalScore.textContent =
+    result.toFixed(2) + "/20";
+
 }
 
 
-// ================================
+// =====================================================
+// DOCUMENT THÉORIQUE
+// =====================================================
+
+function renderTheory() {
+
+  const list = q("theoryList");
+
+  if (!list) return;
+
+  THEORIE.forEach(document => {
+
+    const element =
+      document.createElement("article");
+
+    element.className = "item";
+
+    element.innerHTML = `
+      <h3>
+        ${esc(document.titre)}
+      </h3>
+
+      <p>
+        ${esc(document.texte)}
+      </p>
+    `;
+
+    list.appendChild(element);
+
+  });
+
+}
+
+
+// =====================================================
 // INITIALISATION
-// ================================
+// =====================================================
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-    // Sélection construction
+    const select =
+      q("regimentSelect");
 
-    const constructionSelect =
-        document.getElementById("constructionRegiment");
+    fillSelect(select);
 
-    if (constructionSelect) {
 
-        constructionSelect.innerHTML = `
-            <option value="41st">41st</option>
-            <option value="65st">65st</option>
-        `;
+    if (select) {
 
-        constructionSelect.addEventListener(
-            "change",
-            renderConstruction
-        );
+      select.addEventListener(
+        "change",
+        () => {
 
-        renderConstruction();
+          if (q("constructionList")) {
+
+            renderConstruction();
+
+          }
+
+          if (q("criteriaList")) {
+
+            renderNotation();
+
+          }
+
+        }
+      );
+
     }
 
 
-    // Sélection notation
+    if (q("constructionList")) {
 
-    const notationSelect =
-        document.getElementById("notationRegiment");
+      renderConstruction();
 
-    if (notationSelect) {
-
-        notationSelect.innerHTML = `
-            <option value="41st">41st</option>
-            <option value="65st">65st</option>
-        `;
-
-        notationSelect.addEventListener(
-            "change",
-            renderNotation
-        );
-
-        renderNotation();
     }
 
-});
+
+    if (q("criteriaList")) {
+
+      renderNotation();
+
+    }
+
+
+    renderTheory();
+
+  }
+);
