@@ -4,16 +4,27 @@
 
 const REGIMENTS = {
   "41st": {
-    constructions: [
-      "Construction Alpha",
-      "Construction Bravo"
-    ],
+  constructions: [
+    {
+      nom: "Construction Alpha",
+      contenu: `Matériel nécessaire :
 
-    notation: [
-      { nom: "Traque", coefficient: 2, max: 20 },
-      { nom: "Reconnaissance", coefficient: 3, max: 20 }
-    ]
-  },
+- Élément 1
+- Élément 2
+
+Procédure :
+
+1. Première étape
+2. Deuxième étape
+3. Troisième étape`
+    }
+  ],
+
+  notation: [
+    { nom: "Traque", coefficient: 2, max: 20 },
+    { nom: "Reconnaissance", coefficient: 3, max: 20 }
+  ]
+};
 
   "65st": {
     constructions: [
