@@ -45,3 +45,24 @@ function calc(){
 function renderTheory(){let t=q("theoryList");if(!t)return;THEORIE.forEach(x=>{let e=document.createElement("article");e.className="item";e.innerHTML="<h3>"+esc(x.titre)+"</h3><p>"+esc(x.texte)+"</p>";t.appendChild(e)})}
 function esc(v){return String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 document.addEventListener("DOMContentLoaded",()=>{let s=q("regimentSelect");fillSelect(s);if(s)s.addEventListener("change",()=>{if(q("constructionList"))renderConstruction();if(q("criteriaList"))renderNotation()});if(q("constructionList"))renderConstruction();if(q("criteriaList"))renderNotation();renderTheory()});
+
+function downloadFile(text) {
+    const contenu = text;
+
+    const blob = new Blob(
+        [contenu],
+        { type: "text/plain;charset=utf-8" }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const lien = document.createElement("a");
+    lien.href = url;
+    lien.download = "construction.txt";
+
+    document.body.appendChild(lien);
+    lien.click();
+    lien.remove();
+
+    URL.revokeObjectURL(url);
+}
