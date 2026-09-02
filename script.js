@@ -7,8 +7,8 @@
 
 const REGIMENTS = {
   "41st": [
-    { name: "Traque", max: 20 },
-    { name: "Reconnaissance", max: 20 }
+    { name: "Traque", coefficient: 2, max: 20 },
+    { name: "Reconnaissance", coefficient: 3, max: 20 }
   ],
 
   "65st": [
@@ -16,11 +16,12 @@ const REGIMENTS = {
     { name: "CQB", coefficient: 4, max: 20 }
   ],
 
-   "501st": [
-    { name: "Traque", max: 20 },
-    { name: "Reconnaissance", max: 20 }
-  ],
-  };
+  "75th": [
+    { name: "Assaut", coefficient: 3, max: 20 },
+    { name: "Tactique", coefficient: 2, max: 20 },
+    { name: "Coordination", coefficient: 1, max: 20 }
+  ]
+};
 
   // Exemple :
   // "Régiment X": [
