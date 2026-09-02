@@ -1,149 +1,40 @@
-// ============================================================
-// CONFIGURATION DES RÉGIMENTS
-// Ajoute/modifie les régiments et leurs critères ici.
-// coefficient = poids du critère dans la note finale.
-// max = note maximale possible pour ce critère.
-// ============================================================
-
-const REGIMENTS = {
-  "41st": [
-    { name: "Traque", coefficient: 2, max: 20 },
-    { name: "Reconnaissance", coefficient: 3, max: 20 }
-  ],
-
-  "65st": [
-    { name: "Extraction VIP", coefficient: 3, max: 20 },
-    { name: "CQB", coefficient: 4, max: 20 }
-  ],
-
-  "75th": [
-    { name: "Assaut", coefficient: 3, max: 20 },
-    { name: "Tactique", coefficient: 2, max: 20 },
-    { name: "Coordination", coefficient: 1, max: 20 }
-  ]
+// AJOUTE/MODIFIE TES REGIMENTS ICI
+const REGIMENTS={
+  "41st":{
+    constructions:["Construction Alpha","Construction Bravo"],
+    notation:[{nom:"Traque",coefficient:2,max:20},{nom:"Reconnaissance",coefficient:3,max:20}]
+  },
+  "65st":{
+    constructions:["Construction Delta","Construction Echo"],
+    notation:[{nom:"Extraction VIP",coefficient:3,max:20},{nom:"CQB",coefficient:4,max:20}]
+  }
 };
 
-  // Exemple :
-  // "Régiment X": [
-  //   { name: "Critère 1", max: 20 },
-  //   { name: "Critère 2", max: 10 }
-  // ]
-};
+const THEORIE=[
+  {titre:"Introduction",texte:"Ajoute ici ton document théorique et les notions à connaître."},
+  {titre:"Procédures",texte:"Ajoute ici les procédures générales et consignes."},
+  {titre:"Préparation",texte:"Ajoute ici les éléments à vérifier avant une évaluation."}
+];
 
-const regimentSelect = document.getElementById("regiment");
-const evaluation = document.getElementById("evaluation");
-const emptyState = document.getElementById("emptyState");
-const criteriaList = document.getElementById("criteriaList");
-const regimentTitle = document.getElementById("regimentTitle");
-const finalScore = document.getElementById("finalScore");
-const resetBtn = document.getElementById("resetBtn");
-
-function loadRegiments() {
-  Object.keys(REGIMENTS).forEach((name) => {
-    const option = document.createElement("option");
-    option.value = name;
-    option.textContent = name;
-    regimentSelect.appendChild(option);
-  });
+function q(id){return document.getElementById(id)}
+function fillSelect(s){if(!s)return;Object.keys(REGIMENTS).forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;s.appendChild(o)})}
+function renderConstruction(){
+ const s=q("regimentSelect"),l=q("constructionList"),t=q("selectedRegiment");if(!s||!l)return;
+ l.innerHTML="";let n=s.value;if(!n){t.textContent="Aucun régiment sélectionné";return}t.textContent=n;
+ REGIMENTS[n].constructions.forEach((c,i)=>{let e=document.createElement("div");e.className="item";e.innerHTML="<strong>Construction "+(i+1)+"</strong><br><span class='muted'>"+esc(c)+"</span>";l.appendChild(e)})
 }
-
-function renderEvaluation(regimentName) {
-  const criteria = REGIMENTS[regimentName];
-
-  if (!criteria) {
-    evaluation.classList.add("hidden");
-    emptyState.classList.remove("hidden");
-    return;
-  }
-
-  evaluation.classList.remove("hidden");
-  emptyState.classList.add("hidden");
-  regimentTitle.textContent = regimentName;
-  criteriaList.innerHTML = "";
-
-  criteria.forEach((criterion, index) => {
-    const row = document.createElement("div");
-    row.className = "criteria-row";
-
-    row.innerHTML = `
-      <div>
-        <div class="criterion-name">${escapeHtml(criterion.name)}</div>
-        <div class="criterion-meta">Note maximale : ${criterion.max}/20</div>
-      </div>
-
-      <div class="coefficient">
-        Coef. <strong>×${criterion.coefficient}</strong>
-      </div>
-
-      <input
-        class="note-input"
-        type="number"
-        min="0"
-        max="${criterion.max}"
-        step="0.5"
-        placeholder="0"
-        data-index="${index}"
-        aria-label="Note pour ${escapeHtml(criterion.name)}"
-      >
-    `;
-
-    criteriaList.appendChild(row);
-  });
-
-  criteriaList.querySelectorAll(".note-input").forEach((input) => {
-    input.addEventListener("input", calculateScore);
-  });
-
-  calculateScore();
+function renderNotation(){
+ const s=q("regimentSelect"),l=q("criteriaList"),t=q("selectedRegiment"),f=q("finalScore");if(!s||!l)return;
+ l.innerHTML="";let n=s.value;if(!n){t.textContent="Aucun régiment sélectionné";f.textContent="—";return}t.textContent=n;
+ REGIMENTS[n].notation.forEach((c,i)=>{let e=document.createElement("div");e.className="row";e.innerHTML="<div><strong>"+esc(c.nom)+"</strong><div class='muted'>Maximum : "+c.max+"/20</div></div><div class='coeff'>Coef. ×"+c.coefficient+"</div><input class='score' type='number' min='0' max='"+c.max+"' step='0.5' data-index='"+i+"' placeholder='0'>";l.appendChild(e)});
+ l.querySelectorAll("input").forEach(x=>x.addEventListener("input",calc));calc()
 }
-
-function calculateScore() {
-  const regimentName = regimentSelect.value;
-  const criteria = REGIMENTS[regimentName];
-
-  if (!criteria) {
-    finalScore.textContent = "—";
-    return;
-  }
-
-  const inputs = criteriaList.querySelectorAll(".note-input");
-  let weightedTotal = 0;
-  let coefficientTotal = 0;
-
-  criteria.forEach((criterion, index) => {
-    const raw = Number(inputs[index]?.value);
-    const note = Number.isFinite(raw) ? Math.max(0, Math.min(raw, criterion.max)) : 0;
-
-    // Conversion vers une base /20, puis application du coefficient.
-    const noteSur20 = (note / criterion.max) * 20;
-    weightedTotal += noteSur20 * criterion.coefficient;
-    coefficientTotal += criterion.coefficient;
-  });
-
-  const score = coefficientTotal ? weightedTotal / coefficientTotal : 0;
-  finalScore.textContent = `${score.toFixed(2)}/20`;
+function calc(){
+ let s=q("regimentSelect"),f=q("finalScore");if(!s||!f||!REGIMENTS[s.value])return;
+ let cs=REGIMENTS[s.value].notation,ins=document.querySelectorAll("#criteriaList input"),total=0,coefs=0;
+ cs.forEach((c,i)=>{let n=Math.max(0,Math.min(Number(ins[i]?.value)||0,c.max));total+=(n/c.max*20)*c.coefficient;coefs+=c.coefficient});
+ f.textContent=(coefs?total/coefs:0).toFixed(2)+"/20"
 }
-
-function resetNotes() {
-  criteriaList.querySelectorAll(".note-input").forEach((input) => {
-    input.value = "";
-  });
-  calculateScore();
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-regimentSelect.addEventListener("change", (event) => {
-  renderEvaluation(event.target.value);
-});
-
-resetBtn.addEventListener("click", resetNotes);
-
-loadRegiments();
+function renderTheory(){let t=q("theoryList");if(!t)return;THEORIE.forEach(x=>{let e=document.createElement("article");e.className="item";e.innerHTML="<h3>"+esc(x.titre)+"</h3><p>"+esc(x.texte)+"</p>";t.appendChild(e)})}
+function esc(v){return String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+document.addEventListener("DOMContentLoaded",()=>{let s=q("regimentSelect");fillSelect(s);if(s)s.addEventListener("change",()=>{if(q("constructionList"))renderConstruction();if(q("criteriaList"))renderNotation()});if(q("constructionList"))renderConstruction();if(q("criteriaList"))renderNotation();renderTheory()});
