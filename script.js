@@ -1,56 +1,44 @@
-// ===============================
-// CONFIGURATION DES RÉGIMENTS
-// ===============================
-
 const REGIMENTS = {
-
     "41st": {
         constructions: [
-
             {
-                nom: "Grappin",
-                contenu: `new reco.txt
-========================
+                nom: "Construction Alpha",
+                contenu: `FICHE DE CONSTRUCTION
 
-Grappin
+Construction Alpha
 
 Matériel nécessaire :
-- Élément 1
-- Élément 2
-- Élément 3
+- Exemple 1
+- Exemple 2
+- Exemple 3
 
 Procédure :
-1. Première étape.
-2. Deuxième étape.
-3. Troisième étape.
+1. Première étape
+2. Deuxième étape
+3. Troisième étape
 
-Vérifications :
-- Vérifier la sécurité.
-- Vérifier la stabilité.
-- Vérifier que la construction est terminée.`
+Notes :
+- Vérifier la sécurité
+- Vérifier la stabilité
+`
             },
 
             {
                 nom: "Construction Bravo",
                 contenu: `FICHE DE CONSTRUCTION
-========================
 
 Construction Bravo
 
 Matériel nécessaire :
-- Élément 1
-- Élément 2
+- Exemple 1
+- Exemple 2
 
 Procédure :
-1. Première étape.
-2. Deuxième étape.
-3. Vérification finale.
-
-Vérifications :
-- Vérifier la sécurité.
-- Vérifier la stabilité.`
+1. Première étape
+2. Deuxième étape
+3. Vérification finale
+`
             }
-
         ],
 
         notation: [
@@ -59,6 +47,7 @@ Vérifications :
                 coefficient: 2,
                 max: 20
             },
+
             {
                 nom: "Reconnaissance",
                 coefficient: 3,
@@ -70,46 +59,39 @@ Vérifications :
 
     "65st": {
         constructions: [
-
             {
                 nom: "Construction Delta",
                 contenu: `FICHE DE CONSTRUCTION
-========================
 
 Construction Delta
 
 Matériel nécessaire :
-- Élément 1
-- Élément 2
-- Élément 3
+- Exemple 1
+- Exemple 2
 
 Procédure :
-1. Première étape.
-2. Deuxième étape.
-3. Troisième étape.
-
-Vérifications :
-- Vérifier la sécurité.
-- Vérifier la stabilité.`
+1. Première étape
+2. Deuxième étape
+3. Troisième étape
+`
             },
 
             {
                 nom: "Construction Echo",
                 contenu: `FICHE DE CONSTRUCTION
-========================
 
 Construction Echo
 
 Matériel nécessaire :
-- Élément 1
-- Élément 2
+- Exemple 1
+- Exemple 2
 
 Procédure :
-1. Première étape.
-2. Deuxième étape.
-3. Vérification finale.`
+1. Première étape
+2. Deuxième étape
+3. Vérification finale
+`
             }
-
         ],
 
         notation: [
@@ -118,6 +100,7 @@ Procédure :
                 coefficient: 3,
                 max: 20
             },
+
             {
                 nom: "CQB",
                 coefficient: 4,
@@ -125,130 +108,68 @@ Procédure :
             }
         ]
     }
-
 };
 
 
-// ===============================
-// DONNÉES THÉORIQUES
-// ===============================
-
-const THEORIE = [
-    {
-        titre: "Introduction",
-        contenu: "Présentation générale du régiment et de ses missions."
-    },
-
-    {
-        titre: "Organisation",
-        contenu: "Organisation interne, rôles et responsabilités."
-    },
-
-    {
-        titre: "Procédures",
-        contenu: "Procédures générales à respecter."
-    }
-];
-
-
-// ===============================
-// OUTILS
-// ===============================
+// ==========================================
+// OUTIL
+// ==========================================
 
 function q(id) {
     return document.getElementById(id);
 }
 
 
-function esc(text) {
-    return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-// ===============================
-// REMPLIR UN SELECT
-// ===============================
-
-function fillSelect(select, values) {
-
-    if (!select) return;
-
-    select.innerHTML = "";
-
-    values.forEach(value => {
-
-        const option = document.createElement("option");
-
-        option.value = value;
-        option.textContent = value;
-
-        select.appendChild(option);
-    });
-}
-
-
-// ===============================
+// ==========================================
 // PAGE CONSTRUCTION
-// ===============================
+// ==========================================
 
 function renderConstruction() {
 
     const select = q("constructionRegiment");
-    const container = q("constructionList");
+    const list = q("constructionList");
 
-    if (!select || !container) return;
+    if (!select || !list) {
+        return;
+    }
 
     const regiment = select.value;
     const data = REGIMENTS[regiment];
 
-    container.innerHTML = "";
+    list.innerHTML = "";
 
-    if (!data) return;
-
-
-    // Titre du régiment
-
-    const title = document.createElement("h2");
-
-    title.textContent = regiment;
-
-    container.appendChild(title);
+    if (!data) {
+        return;
+    }
 
 
-    // Création des constructions
-
-    data.constructions.forEach((construction, i) => {
+    data.constructions.forEach((construction, index) => {
 
         const element = document.createElement("div");
 
         element.className = "item";
 
-        element.innerHTML = `
-            <strong>Construction ${i + 1}</strong>
-            <br>
 
-            <span class="muted">
-                ${esc(construction.nom)}
-            </span>
+        const titre = document.createElement("strong");
 
-            <br><br>
-
-            <button type="button">
-                ⬇️ Télécharger
-            </button>
-        `;
+        titre.textContent = `Construction ${index + 1}`;
 
 
-        // Bouton téléchargement
+        const nom = document.createElement("div");
 
-        const button = element.querySelector("button");
+        nom.textContent = construction.nom;
 
-        button.addEventListener("click", () => {
+        nom.className = "muted";
+
+
+        const bouton = document.createElement("button");
+
+        bouton.type = "button";
+
+        bouton.textContent = "⬇️ Télécharger";
+
+
+        bouton.addEventListener("click", function () {
 
             downloadFile(
                 construction.nom,
@@ -258,19 +179,32 @@ function renderConstruction() {
         });
 
 
-        container.appendChild(element);
+        element.appendChild(titre);
+
+        element.appendChild(document.createElement("br"));
+
+        element.appendChild(nom);
+
+        element.appendChild(document.createElement("br"));
+
+        element.appendChild(document.createElement("br"));
+
+        element.appendChild(bouton);
+
+
+        list.appendChild(element);
 
     });
 }
 
 
-// ===============================
-// TÉLÉCHARGEMENT D'UNE CONSTRUCTION
-// ===============================
+// ==========================================
+// TÉLÉCHARGEMENT
+// ==========================================
 
 function downloadFile(nom, contenu) {
 
-    const blob = new Blob(
+    const fichier = new Blob(
         [contenu],
         {
             type: "text/plain;charset=utf-8"
@@ -278,51 +212,48 @@ function downloadFile(nom, contenu) {
     );
 
 
-    const url = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(fichier);
 
 
-    const link = document.createElement("a");
+    const lien = document.createElement("a");
 
-    link.href = url;
+    lien.href = url;
 
-    link.download = `${nom}.txt`;
+    lien.download = nom + ".txt";
 
 
-    document.body.appendChild(link);
+    document.body.appendChild(lien);
 
-    link.click();
+    lien.click();
 
-    document.body.removeChild(link);
+    document.body.removeChild(lien);
 
 
     URL.revokeObjectURL(url);
 }
 
 
-// ===============================
+// ==========================================
 // PAGE NOTATION
-// ===============================
+// ==========================================
 
 function renderNotation() {
 
     const select = q("notationRegiment");
-    const container = q("notationList");
+    const list = q("notationList");
 
-    if (!select || !container) return;
+    if (!select || !list) {
+        return;
+    }
 
     const regiment = select.value;
     const data = REGIMENTS[regiment];
 
-    container.innerHTML = "";
+    list.innerHTML = "";
 
-    if (!data) return;
-
-
-    const title = document.createElement("h2");
-
-    title.textContent = regiment;
-
-    container.appendChild(title);
+    if (!data) {
+        return;
+    }
 
 
     data.notation.forEach((critere, index) => {
@@ -333,16 +264,11 @@ function renderNotation() {
 
 
         element.innerHTML = `
-            <strong>
-                ${esc(critere.nom)}
-            </strong>
-
+            <strong>${critere.nom}</strong>
             <br>
-
             <span class="muted">
                 Coefficient : ${critere.coefficient}
             </span>
-
             <br><br>
 
             <label>
@@ -354,20 +280,21 @@ function renderNotation() {
                 min="0"
                 max="${critere.max}"
                 value="0"
-                data-index="${index}"
                 class="notation-input"
             >
         `;
 
 
-        container.appendChild(element);
+        list.appendChild(element);
 
     });
 
 
     calculateNotation();
 
-    const inputs = container.querySelectorAll(".notation-input");
+
+    const inputs =
+        list.querySelectorAll(".notation-input");
 
 
     inputs.forEach(input => {
@@ -378,45 +305,42 @@ function renderNotation() {
         );
 
     });
-
 }
 
 
-// ===============================
-// CALCUL DE LA NOTE
-// ===============================
+// ==========================================
+// CALCUL NOTE
+// ==========================================
 
 function calculateNotation() {
 
     const select = q("notationRegiment");
-    const container = q("notationList");
+    const list = q("notationList");
     const result = q("notationResult");
 
-    if (!select || !container || !result) return;
+    if (!select || !list || !result) {
+        return;
+    }
 
+    const data = REGIMENTS[select.value];
 
-    const regiment = select.value;
-    const data = REGIMENTS[regiment];
-
-    if (!data) return;
+    if (!data) {
+        return;
+    }
 
 
     const inputs =
-        container.querySelectorAll(".notation-input");
+        list.querySelectorAll(".notation-input");
 
 
     let total = 0;
+
     let coefficients = 0;
 
 
     data.notation.forEach((critere, index) => {
 
-        const input = inputs[index];
-
-        if (!input) return;
-
-
-        let note = Number(input.value);
+        let note = Number(inputs[index].value);
 
 
         if (isNaN(note)) {
@@ -424,19 +348,13 @@ function calculateNotation() {
         }
 
 
-        // Empêche une note négative
-
         if (note < 0) {
             note = 0;
-            input.value = 0;
         }
 
 
-        // Empêche de dépasser le maximum
-
         if (note > critere.max) {
             note = critere.max;
-            input.value = critere.max;
         }
 
 
@@ -447,133 +365,94 @@ function calculateNotation() {
     });
 
 
-    let finalScore = 0;
+    let score = 0;
 
 
     if (coefficients > 0) {
-
-        finalScore =
-            total / coefficients;
-
+        score = total / coefficients;
     }
 
 
     result.textContent =
-        `Note finale : ${finalScore.toFixed(2)} / 20`;
-
+        "Note finale : " + score.toFixed(2) + " / 20";
 }
 
 
-// ===============================
-// PAGE THÉORIQUE
-// ===============================
-
-function renderTheorie() {
-
-    const container = q("theorieList");
-
-    if (!container) return;
-
-    container.innerHTML = "";
-
-
-    THEORIE.forEach(section => {
-
-        const element =
-            document.createElement("div");
-
-
-        element.className = "item";
-
-
-        element.innerHTML = `
-            <strong>
-                ${esc(section.titre)}
-            </strong>
-
-            <br><br>
-
-            <span class="muted">
-                ${esc(section.contenu)}
-            </span>
-        `;
-
-
-        container.appendChild(element);
-
-    });
-
-}
-
-
-// ===============================
+// ==========================================
 // INITIALISATION
-// ===============================
+// ==========================================
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+document.addEventListener("DOMContentLoaded", function () {
 
+    // CONSTRUCTION
 
-        // ---------------------------
-        // Construction
-        // ---------------------------
-
-        const constructionSelect =
-            q("constructionRegiment");
+    const constructionSelect =
+        q("constructionRegiment");
 
 
-        if (constructionSelect) {
+    if (constructionSelect) {
 
-            fillSelect(
-                constructionSelect,
-                Object.keys(REGIMENTS)
-            );
+        constructionSelect.innerHTML = "";
 
 
-            constructionSelect.addEventListener(
-                "change",
-                renderConstruction
-            );
+        Object.keys(REGIMENTS).forEach(function (regiment) {
+
+            const option =
+                document.createElement("option");
+
+            option.value = regiment;
+
+            option.textContent = regiment;
+
+            constructionSelect.appendChild(option);
+
+        });
 
 
-            renderConstruction();
-
-        }
-
-
-        // ---------------------------
-        // Notation
-        // ---------------------------
-
-        const notationSelect =
-            q("notationRegiment");
+        constructionSelect.addEventListener(
+            "change",
+            renderConstruction
+        );
 
 
-        if (notationSelect) {
-
-            fillSelect(
-                notationSelect,
-                Object.keys(REGIMENTS)
-            );
-
-
-            notationSelect.addEventListener(
-                "change",
-                renderNotation
-            );
-
-
-            renderNotation();
-
-        }
-
-
-        // ---------------------------
-        // Théorie
-        // ---------------------------
-
-        renderTheorie();
+        renderConstruction();
 
     }
-);
+
+
+    // NOTATION
+
+    const notationSelect =
+        q("notationRegiment");
+
+
+    if (notationSelect) {
+
+        notationSelect.innerHTML = "";
+
+
+        Object.keys(REGIMENTS).forEach(function (regiment) {
+
+            const option =
+                document.createElement("option");
+
+            option.value = regiment;
+
+            option.textContent = regiment;
+
+            notationSelect.appendChild(option);
+
+        });
+
+
+        notationSelect.addEventListener(
+            "change",
+            renderNotation
+        );
+
+
+        renderNotation();
+
+    }
+
+});
