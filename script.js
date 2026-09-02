@@ -7,19 +7,11 @@ const REGIMENTS = {
 
 Construction Alpha
 
-Matériel nécessaire :
-- Exemple 1
-- Exemple 2
-- Exemple 3
-
-Procédure :
-1. Première étape
-2. Deuxième étape
-3. Troisième étape
-
-Notes :
-- Vérifier la sécurité
-- Vérifier la stabilité
+AD2F
+size3311timezone+0200date18 May 2026time05:31 PMname41st ARC SGT 7860 Kayrixcheck
+	
+
+]
 `
             },
 
