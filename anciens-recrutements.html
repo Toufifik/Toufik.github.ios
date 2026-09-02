@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiche d'ancien recrutement</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .history-head{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+    .search{width:100%;max-width:520px;padding:13px 15px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:#111820;color:#fff}
+    .old-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:22px}
+    .recruit-card{cursor:pointer;padding:20px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.04);transition:.2s}
+    .recruit-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.07)}
+    .recruit-card h3{margin:0 0 8px}
+    .recruit-card p{margin:6px 0;opacity:.85}
+    .status{font-weight:800;margin-top:12px}
+    .accepted{color:#8ee28e}.refused{color:#ff8d8d}
+    .empty{text-align:center;opacity:.7;padding:35px}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:20px}
+    .modal.open{display:flex}
+    .modal-box{width:min(700px,100%);max-height:90vh;overflow:auto;background:#10171e;border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:24px;position:relative}
+    .close{position:absolute;right:15px;top:12px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
+    .details{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+    .detail{padding:13px;border-radius:10px;background:rgba(255,255,255,.05)}
+    .detail span{display:block;font-size:12px;opacity:.6;margin-bottom:4px}
+    .modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    @media(max-width:600px){.details{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header>
+  <nav class="nav">
+    <div class="logo">RÉGIMENTS</div>
+    <a href="index.html">Accueil</a>
+    <a href="theorique.html">Théorique</a>
+    <a href="construction.html">Construction</a>
+    <a href="notation.html">Notation</a>
+    <a href="fiches.html">Fiches</a>
+    <a href="anciens-recrutements.html" class="active">Anciens recrutements</a>
+  </nav>
+</header>
+
+<main class="container">
+  <div class="history-head">
+    <div>
+      <h1>Fiche d'ancien recrutement</h1>
+      <p>Clique sur un recrutement pour afficher toute la fiche.</p>
+    </div>
+    <input id="search" class="search" type="search" placeholder="Rechercher par nom, matricule, Steam ID ou régiment...">
+  </div>
+
+  <section id="oldList" class="old-list"></section>
+</main>
+
+<div id="modal" class="modal">
+  <div class="modal-box">
+    <button id="closeModal" class="close" type="button">×</button>
+    <h2 id="modalTitle">Fiche de recrutement</h2>
+    <div id="details" class="details"></div>
+    <div class="modal-actions">
+      <button id="copyModal" type="button">📋 Copier / coller pour Discord</button>
+      <button id="deleteModal" type="button">🗑️ Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const KEY = "regiments_anciens_recrutements";
+let currentId = null;
+
+const $ = id => document.getElementById(id);
+
+function getRecords(){
+  return JSON.parse(localStorage.getItem(KEY) || "[]");
+}
+
+function saveRecords(records){
+  localStorage.setItem(KEY, JSON.stringify(records));
+}
+
+function displayValue(v){ return v === undefined || v === null || v === "" ? "—" : v; }
+
+function discordText(r){
+  return `**📋 FICHE DE RECRUTEMENT**
+
+**Nom :** ${displayValue(r.nom)}
+**Matricule :** ${displayValue(r.matricule)}
+**Steam ID :** ${displayValue(r.steam)}
+**Régiment :** ${displayValue(r.regiment)}
+**Date :** ${displayValue(r.date)}
+
+**Note théorique :** ${displayValue(r.theorique)}/100
+**Note pratique :** ${displayValue(r.pratique)}/100
+**Note finale :** ${displayValue(r.total)}/100
+
+**Décision :** ${displayValue(r.decision)}`;
+}
+
+function render(){
+  const query = $("search").value.trim().toLowerCase();
+  const records = getRecords().filter(r =>
+    [r.nom, r.matricule, r.steam, r.regiment].some(v => String(v || "").toLowerCase().includes(query))
+  );
+
+  if(!records.length){
+    $("oldList").innerHTML = `<div class="empty">Aucun ancien recrutement trouvé.</div>`;
+    return;
+  }
+
+  $("oldList").innerHTML = records.map(r => {
+    const cls = r.decision === "ACCEPTÉ" ? "accepted" : "refused";
+    return `<article class="recruit-card" data-id="${r.id}">
+      <h3>${escapeHtml(r.nom)}</h3>
+      <p><strong>Matricule :</strong> ${escapeHtml(r.matricule)}</p>
+      <p><strong>Régiment :</strong> ${escapeHtml(r.regiment)}</p>
+      <p><strong>Date :</strong> ${escapeHtml(r.date)}</p>
+      <p><strong>Note :</strong> ${escapeHtml(String(r.total))}/100</p>
+      <div class="status ${cls}">${escapeHtml(r.decision)}</div>
+    </article>`;
+  }).join("");
+
+  document.querySelectorAll(".recruit-card").forEach(card => {
+    card.addEventListener("click", () => openModal(Number(card.dataset.id)));
+  });
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+
+function openModal(id){
+  const r = getRecords().find(x => x.id === id);
+  if(!r) return;
+  currentId = id;
+  $("modalTitle").textContent = "Fiche de recrutement — " + r.nom;
+  $("details").innerHTML = `
+    <div class="detail"><span>Nom</span><strong>${escapeHtml(r.nom)}</strong></div>
+    <div class="detail"><span>Matricule</span><strong>${escapeHtml(r.matricule)}</strong></div>
+    <div class="detail"><span>Steam ID</span><strong>${escapeHtml(r.steam)}</strong></div>
+    <div class="detail"><span>Régiment</span><strong>${escapeHtml(r.regiment)}</strong></div>
+    <div class="detail"><span>Date</span><strong>${escapeHtml(r.date)}</strong></div>
+    <div class="detail"><span>Note théorique</span><strong>${escapeHtml(String(r.theorique))}/100</strong></div>
+    <div class="detail"><span>Note pratique</span><strong>${escapeHtml(String(r.pratique))}/100</strong></div>
+    <div class="detail"><span>Note finale</span><strong>${escapeHtml(String(r.total))}/100</strong></div>
+    <div class="detail"><span>Décision</span><strong>${escapeHtml(r.decision)}</strong></div>`;
+  $("modal").classList.add("open");
+}
+
+function closeModal(){ $("modal").classList.remove("open"); currentId = null; }
+
+$("search").addEventListener("input", render);
+$("closeModal").addEventListener("click", closeModal);
+$("modal").addEventListener("click", e => { if(e.target === $("modal")) closeModal(); });
+
+$("copyModal").addEventListener("click", async () => {
+  const r = getRecords().find(x => x.id === currentId);
+  if(!r) return;
+  await navigator.clipboard.writeText(discordText(r));
+  alert("Fiche copiée ! Tu peux maintenant la coller sur Discord.");
+});
+
+$("deleteModal").addEventListener("click", () => {
+  if(currentId === null) return;
+  if(!confirm("Supprimer définitivement ce recrutement ?")) return;
+  saveRecords(getRecords().filter(r => r.id !== currentId));
+  closeModal();
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
