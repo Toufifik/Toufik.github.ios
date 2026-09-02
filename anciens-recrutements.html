@@ -1,59 +1,257 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fiche d'ancien recrutement</title><link rel="stylesheet" href="style.css">
-<style>
-.history-head{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
-.search{width:100%;max-width:520px;padding:13px 15px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:#111820;color:#fff}
-.old-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:22px}
-.recruit-card{cursor:pointer;padding:20px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.04);transition:.2s}
-.recruit-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3)}
-.recruit-card h3{margin:0 0 8px}.recruit-card p{margin:6px 0;opacity:.85}
-.status{font-weight:800;margin-top:12px}.accepted{color:#8ee28e}.refused{color:#ff8d8d}.empty{text-align:center;opacity:.7;padding:35px;grid-column:1/-1}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}
-.modal-box{width:min(700px,100%);max-height:90vh;overflow:auto;background:#10171e;border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:24px;position:relative}
-.close{position:absolute;right:15px;top:12px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
-.details{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.detail{padding:13px;border-radius:10px;background:rgba(255,255,255,.05)}.detail span{display:block;font-size:12px;opacity:.6;margin-bottom:4px}
-.modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}@media(max-width:600px){.details{grid-template-columns:1fr}}
-</style></head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiche d'ancien recrutement</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .history-head{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+    .search{width:100%;max-width:520px;padding:13px 15px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:#111820;color:#fff}
+    .history-info{margin-top:12px;opacity:.7;font-size:.9rem}
+    .old-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:22px}
+    .recruit-card{cursor:pointer;padding:20px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.04);transition:.2s}
+    .recruit-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.07)}
+    .recruit-card h3{margin:0 0 8px}
+    .recruit-card p{margin:6px 0;opacity:.85}
+    .status{font-weight:800;margin-top:12px}
+    .accepted{color:#8ee28e}.refused{color:#ff8d8d}
+    .empty{text-align:center;opacity:.7;padding:35px;grid-column:1/-1}
+    .error{padding:20px;border-radius:12px;background:rgba(180,40,40,.15);color:#ff9999;grid-column:1/-1}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:50;align-items:center;justify-content:center;padding:20px}
+    .modal.open{display:flex}
+    .modal-box{width:min(700px,100%);max-height:90vh;overflow:auto;background:#10171e;border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:24px;position:relative}
+    .close{position:absolute;right:15px;top:12px;background:none;border:0;color:#fff;font-size:26px;cursor:pointer}
+    .details{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+    .detail{padding:13px;border-radius:10px;background:rgba(255,255,255,.05)}
+    .detail span{display:block;font-size:12px;opacity:.6;margin-bottom:4px}
+    .modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    @media(max-width:600px){.details{grid-template-columns:1fr}}
+  </style>
+</head>
 <body>
-<header><nav class="nav"><div class="logo">RÉGIMENTS</div><a href="index.html">Accueil</a><a href="theorique.html">Théorique</a><a href="construction.html">Construction</a><a href="notation.html">Notation</a><a href="fiches.html">Fiches</a><a href="anciens-recrutements.html" class="active">Anciens recrutements</a></nav></header>
+<header>
+  <nav class="nav">
+    <div class="logo">RÉGIMENTS</div>
+    <a href="index.html">Accueil</a>
+    <a href="theorique.html">Théorique</a>
+    <a href="construction.html">Construction</a>
+    <a href="notation.html">Notation</a>
+    <a href="fiches.html">Fiches</a>
+    <a href="anciens-recrutements.html" class="active">Anciens recrutements</a>
+  </nav>
+</header>
+
 <main class="container">
-<div class="history-head"><div><h1>Fiche d'ancien recrutement</h1><p>Tous les recrutements enregistrés sont visibles ici par tous les utilisateurs.</p></div><input id="search" class="search" type="search" placeholder="Rechercher par nom, matricule, Steam ID ou régiment..."></div>
-<section id="oldList" class="old-list"></section>
+  <div class="history-head">
+    <div>
+      <h1>Fiche d'ancien recrutement</h1>
+      <p>Tous les recrutements enregistrés sont visibles par tous les utilisateurs.</p>
+    </div>
+    <input id="search" class="search" type="search" placeholder="Rechercher par nom, matricule, Steam ID ou régiment...">
+  </div>
+
+  <div id="historyInfo" class="history-info">Chargement...</div>
+  <section id="oldList" class="old-list"></section>
 </main>
-<div id="modal" class="modal"><div class="modal-box"><button id="close" class="close">×</button><h2 id="title"></h2><div id="details" class="details"></div><div class="modal-actions"><button id="copy">📋 Copier / coller pour Discord</button><button id="delete">🗑️ Supprimer</button></div></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<div id="modal" class="modal">
+  <div class="modal-box">
+    <button id="closeModal" class="close" type="button">×</button>
+    <h2 id="modalTitle">Fiche de recrutement</h2>
+    <div id="details" class="details"></div>
+    <div class="modal-actions">
+      <button id="copyModal" type="button">📋 Copier / coller pour Discord</button>
+      <button id="deleteModal" type="button">🗑️ Supprimer</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const supabaseClient=supabase.createClient("https://tziymtfcvpvbgfwpfiyb.supabase.co","sb_publishable_FT2l5rP1bmjxBBn6YAX6Kg_E5wBeiWV");
-let current=null;const $=id=>document.getElementById(id);
-const esc=s=>String(s??"—").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-function discord(r){return `**📋 FICHE DE RECRUTEMENT**
+const SUPABASE_URL = "https://tziymtfcvpvbgfwpfiyb.supabase.co";
+const SUPABASE_KEY = "sb_publishable_FT2l5rP1bmjxBBn6YAX6Kg_E5wBeiWV";
+const API_URL = SUPABASE_URL + "/rest/v1/recrutements";
 
-**Nom :** ${r.nom}
-**Matricule :** ${r.matricule}
-**Steam ID :** ${r.steam}
-**Régiment :** ${r.regiment}
-**Date :** ${r.date}
+const $ = id => document.getElementById(id);
+let records = [];
+let currentRecord = null;
 
-**Note théorique :** ${r.theorique}/100
-**Note pratique :** ${r.pratique}/100
-**Note finale :** ${r.total}/100
-
-**Décision :** ${r.decision}`;}
-async function render(){
- const {data,error}=await supabaseClient.from("recrutements").select("*").order("created_at",{ascending:false});
- if(error){$("oldList").innerHTML='<div class="empty">Impossible de charger les recrutements : '+esc(error.message)+'</div>';return}
- const q=$("search").value.toLowerCase().trim();
- const rows=(data||[]).filter(r=>[r.nom,r.matricule,r.steam,r.regiment].some(v=>String(v??"").toLowerCase().includes(q)));
- if(!rows.length){$("oldList").innerHTML='<div class="empty">Aucun ancien recrutement trouvé.</div>';return}
- $("oldList").innerHTML=rows.map(r=>`<article class="recruit-card" data-id="${r.id}"><h3>${esc(r.nom)}</h3><p><strong>Matricule :</strong> ${esc(r.matricule)}</p><p><strong>Régiment :</strong> ${esc(r.regiment)}</p><p><strong>Date :</strong> ${esc(r.date)}</p><p><strong>Note :</strong> ${esc(r.total)}/100</p><div class="status ${r.decision==="ACCEPTÉ"?"accepted":"refused"}">${esc(r.decision)}</div></article>`).join("");
- document.querySelectorAll(".recruit-card").forEach(c=>c.onclick=()=>open(Number(c.dataset.id),rows));
+function esc(value) {
+  return String(value ?? "—").replace(/[&<>"']/g, character => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+  })[character]);
 }
-function open(id,rows){const r=rows.find(x=>x.id===id);if(!r)return;current=r;$("title").textContent="Fiche de recrutement — "+r.nom;$("details").innerHTML=`<div class="detail"><span>Nom</span><strong>${esc(r.nom)}</strong></div><div class="detail"><span>Matricule</span><strong>${esc(r.matricule)}</strong></div><div class="detail"><span>Steam ID</span><strong>${esc(r.steam)}</strong></div><div class="detail"><span>Régiment</span><strong>${esc(r.regiment)}</strong></div><div class="detail"><span>Date</span><strong>${esc(r.date)}</strong></div><div class="detail"><span>Note théorique</span><strong>${esc(r.theorique)}/100</strong></div><div class="detail"><span>Note pratique</span><strong>${esc(r.pratique)}/100</strong></div><div class="detail"><span>Note finale</span><strong>${esc(r.total)}/100</strong></div><div class="detail"><span>Décision</span><strong>${esc(r.decision)}</strong></div>`;$("modal").classList.add("open")}
-$("search").oninput=render;$("close").onclick=()=>$("modal").classList.remove("open");$("modal").onclick=e=>{if(e.target===$("modal"))$("modal").classList.remove("open")};
-$("copy").onclick=async()=>{if(!current)return;try{await navigator.clipboard.writeText(discord(current))}catch(e){}alert("Fiche copiée ! Tu peux la coller sur Discord.")};
-$("delete").onclick=async()=>{if(!current||!confirm("Supprimer définitivement ce recrutement ?"))return;const {error}=await supabaseClient.from("recrutements").delete().eq("id",current.id);if(error){alert("Erreur : "+error.message);return}$("modal").classList.remove("open");current=null;render()};
-render();
-</script></body></html>
+
+function discordText(record) {
+  return `**📋 FICHE DE RECRUTEMENT**
+
+**Nom :** ${record.nom}
+**Matricule :** ${record.matricule}
+**Steam ID :** ${record.steam}
+**Régiment :** ${record.regiment}
+**Date :** ${record.date}
+
+**Note théorique :** ${record.theorique}/100
+**Note pratique :** ${record.pratique}/100
+**Note finale :** ${record.total}/100
+
+**Décision :** ${record.decision}`;
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (error) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+  }
+}
+
+function render() {
+  const query = $("search").value.trim().toLowerCase();
+
+  const filtered = records.filter(record =>
+    [record.nom, record.matricule, record.steam, record.regiment]
+      .some(value => String(value ?? "").toLowerCase().includes(query))
+  );
+
+  $("historyInfo").textContent =
+    filtered.length + " recrutement" + (filtered.length > 1 ? "s" : "") + " affiché" + (filtered.length > 1 ? "s" : "");
+
+  if (!filtered.length) {
+    $("oldList").innerHTML = '<div class="empty">Aucun ancien recrutement trouvé.</div>';
+    return;
+  }
+
+  $("oldList").innerHTML = filtered.map(record => {
+    const statusClass = record.decision === "ACCEPTÉ" ? "accepted" : "refused";
+    return `
+      <article class="recruit-card" data-id="${record.id}">
+        <h3>${esc(record.nom)}</h3>
+        <p><strong>Matricule :</strong> ${esc(record.matricule)}</p>
+        <p><strong>Régiment :</strong> ${esc(record.regiment)}</p>
+        <p><strong>Date :</strong> ${esc(record.date)}</p>
+        <p><strong>Note :</strong> ${esc(record.total)}/100</p>
+        <div class="status ${statusClass}">${esc(record.decision)}</div>
+      </article>`;
+  }).join("");
+
+  document.querySelectorAll(".recruit-card").forEach(card => {
+    card.addEventListener("click", () => openModal(Number(card.dataset.id)));
+  });
+}
+
+async function loadRecords() {
+  try {
+    const response = await fetch(API_URL + "?select=*&order=created_at.desc", {
+      method: "GET",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY
+      },
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      let details = "";
+      try {
+        const data = await response.json();
+        details = data.message || data.error_description || data.hint || "";
+      } catch (_) {}
+      throw new Error(details || "Impossible de charger les recrutements.");
+    }
+
+    records = await response.json();
+    render();
+  } catch (error) {
+    console.error(error);
+    $("historyInfo").textContent = "Erreur de connexion";
+    $("oldList").innerHTML = '<div class="error">❌ ' + esc(error.message) + '<br><br>Vérifie que la table <strong>recrutements</strong> et sa politique SELECT sont bien actives dans Supabase.</div>';
+  }
+}
+
+function openModal(id) {
+  const record = records.find(item => Number(item.id) === Number(id));
+  if (!record) return;
+
+  currentRecord = record;
+
+  $("modalTitle").textContent = "Fiche de recrutement — " + record.nom;
+
+  $("details").innerHTML = `
+    <div class="detail"><span>Nom</span><strong>${esc(record.nom)}</strong></div>
+    <div class="detail"><span>Matricule</span><strong>${esc(record.matricule)}</strong></div>
+    <div class="detail"><span>Steam ID</span><strong>${esc(record.steam)}</strong></div>
+    <div class="detail"><span>Régiment</span><strong>${esc(record.regiment)}</strong></div>
+    <div class="detail"><span>Date</span><strong>${esc(record.date)}</strong></div>
+    <div class="detail"><span>Note théorique</span><strong>${esc(record.theorique)}/100</strong></div>
+    <div class="detail"><span>Note pratique</span><strong>${esc(record.pratique)}/100</strong></div>
+    <div class="detail"><span>Note finale</span><strong>${esc(record.total)}/100</strong></div>
+    <div class="detail"><span>Décision</span><strong>${esc(record.decision)}</strong></div>
+  `;
+
+  $("modal").classList.add("open");
+}
+
+function closeModal() {
+  $("modal").classList.remove("open");
+  currentRecord = null;
+}
+
+$("search").addEventListener("input", render);
+
+$("closeModal").addEventListener("click", closeModal);
+
+$("modal").addEventListener("click", event => {
+  if (event.target === $("modal")) closeModal();
+});
+
+$("copyModal").addEventListener("click", async () => {
+  if (!currentRecord) return;
+  await copyText(discordText(currentRecord));
+  alert("✅ Fiche copiée ! Tu peux maintenant la coller sur Discord.");
+});
+
+$("deleteModal").addEventListener("click", async () => {
+  if (!currentRecord) return;
+
+  if (!confirm("Supprimer définitivement ce recrutement ?")) return;
+
+  const id = currentRecord.id;
+
+  try {
+    const response = await fetch(API_URL + "?id=eq." + encodeURIComponent(id), {
+      method: "DELETE",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + SUPABASE_KEY
+      }
+    });
+
+    if (!response.ok) {
+      let details = "";
+      try {
+        const data = await response.json();
+        details = data.message || data.error_description || data.hint || "";
+      } catch (_) {}
+      throw new Error(details || "Impossible de supprimer ce recrutement.");
+    }
+
+    closeModal();
+    await loadRecords();
+  } catch (error) {
+    alert("❌ " + error.message);
+  }
+});
+
+loadRecords();
+
+// Actualise l'historique toutes les 10 secondes.
+setInterval(loadRecords, 10000);
+</script>
+</body>
+</html>
