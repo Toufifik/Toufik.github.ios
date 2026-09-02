@@ -20,6 +20,7 @@ const REGIMENTS = {
     { name: "Traque", max: 20 },
     { name: "Reconnaissance", max: 20 }
   ],
+  };
 
   // Exemple :
   // "Régiment X": [
