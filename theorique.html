@@ -86,80 +86,60 @@
             </h1>
 
             <p>
-                Base documentaire à compléter.
+                Sélectionne le régiment pour afficher son épreuve théorique.
             </p>
 
         </section>
 
 
         <!-- ========================= -->
-        <!-- INFORMATIONS GÉNÉRALES -->
+        <!-- SÉLECTION DU RÉGIMENT -->
         <!-- ========================= -->
 
         <section class="card">
 
-            <h2>
-                Informations générales
-            </h2>
+            <label for="regimentSelect">
 
-            <p>
-                Ajoute ici tes cours, consignes et procédures.
-            </p>
+                Régiment
+
+            </label>
 
 
-            <h3>
-                Règles
-            </h3>
+            <select id="regimentSelect">
 
-            <ul>
+                <option value="autre">
 
-                <li>
-                    À compléter
-                </li>
+                    Autre régiment
 
-                <li>
-                    À compléter
-                </li>
+                </option>
 
-                <li>
-                    À compléter
-                </li>
+                <option value="212th">
 
-            </ul>
+                    212th
+
+                </option>
+
+                <option value="104th">
+
+                    104th
+
+                </option>
+
+            </select>
 
         </section>
 
 
         <!-- ========================= -->
-        <!-- NOUVELLE SECTION -->
+        <!-- ÉPREUVE THÉORIQUE -->
         <!-- ========================= -->
 
-        <section class="card">
+        <section
+            class="card"
+            id="epreuve"
+        >
 
-            <h2>
-                Formation
-            </h2>
-
-            <p>
-                Ajoute ici les informations concernant la formation.
-            </p>
-
-            <h3>
-                Partie 1
-            </h3>
-
-            <p>
-                Texte à compléter.
-            </p>
-
-
-            <h3>
-                Partie 2
-            </h3>
-
-            <p>
-                Texte à compléter.
-            </p>
+            <!-- Le contenu est chargé automatiquement -->
 
         </section>
 
@@ -176,6 +156,506 @@
         Site de gestion des régiments • GitHub Pages
 
     </footer>
+
+
+    <!-- ========================= -->
+    <!-- SCRIPT -->
+    <!-- ========================= -->
+
+    <script>
+
+
+        /* ===================================== */
+        /* CONTENU DES RÉGIMENTS */
+        /* ===================================== */
+
+
+        const THEORIQUE = {
+
+
+            /* ================================= */
+            /* AUTRE RÉGIMENT */
+            /* ================================= */
+
+            "autre": {
+
+                titre:
+                    "Épreuve théorique (31 points)",
+
+                contenu: `
+
+                    <div class="theory-question">
+
+                        <h3>
+                            1. Qui sont ceux qui ont formé les RC
+                            et la traduction en Mando’a ? (X/2)
+                        </h3>
+
+                        <ul>
+
+                            <li>
+                                Cuy’Val Dar
+                            </li>
+
+                            <li>
+                                Ceux qui n'existe plus
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="theory-question">
+
+                        <h3>
+                            2. Citez 2 noms des instructeurs des RC ? (X/2)
+                        </h3>
+
+                        <ul>
+
+                            <li>
+                                Kal Skirata
+                            </li>
+
+                            <li>
+                                Walon Vau
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="theory-question">
+
+                        <h3>
+                            3. Parmi les escouades, laquelle porte le nom
+                            de clan de leurs instructeurs et son nom ? (X/2)
+                        </h3>
+
+                        <ul>
+
+                            <li>
+                                Escouade Omega
+                            </li>
+
+                            <li>
+                                Kal Skirata
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="theory-question">
+
+                        <h3>
+                            4. Avec un ou des adjectifs, comment qualifiez
+                            vous la ou les compétences d’un RC Reg
+                            dans son régiment ? (X/4)
+                        </h3>
+
+                        <p>
+                            C’est à l’appréciation du formateur.
+                            Ils doivent ensuite citer une équivalence
+                            de ces adjectifs :
+                        </p>
+
+                        <ul>
+
+                            <li>
+                                Rigoureux
+                            </li>
+
+                            <li>
+                                Sérieux
+                            </li>
+
+                            <li>
+                                Exemplaire
+                            </li>
+
+                            <li>
+                                Pédagogue
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="theory-question">
+
+                        <h3>
+                            5. Donnez-moi les caractéristiques des
+                            équipements des RC ? (X/5)
+                        </h3>
+
+                        <p>
+                            C’est à l’appréciation du formateur.
+                            Ils doivent ensuite citer une équivalence
+                            de ces éléments :
+                        </p>
+
+                        <ul>
+
+                            <li>
+                                <strong>
+                                    Armure Katarn
+                                </strong>
+
+                                — HUD, injecteur bacta,
+                                visière auto-réparante,
+                                système de communication très courte portée,
+                                camouflage, combinaison noire.
+                            </li>
+
+                            <li>
+                                <strong>
+                                    DC-17 Modulaire
+                                </strong>
+
+                                — sniper, shotgun, rifle, anti-armor.
+                            </li>
+
+                            <li>
+                                <strong>
+                                    Accessoires
+                                </strong>
+
+                                — grenade, vibro-dague, etc.
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="theory-question">
+
+                        <h3>
+                            6. D’où vient l’origine du nom Katarn ? (X/1)
+                        </h3>
+
+                        <p>
+                            Le nom fait référence à une créature de
+                            Kashyyyk du nom de Katarn. Cette créature
+                            est très résistante et figure parmi les
+                            prédateurs les plus féroces.
+                        </p>
+
+                    </div>
+
+
+                    <div class="theory-question">
+
+                        <h3>
+                            7. Quelles sont les spécialités de chaque
+                            membre dans une escouade RC ? (X/4)
+                        </h3>
+
+                        <ul>
+
+                            <li>
+                                Chef d’escouade
+                            </li>
+
+                            <li>
+                                Hacker
+                            </li>
+
+                            <li>
+                                Sniper / Médic
+                            </li>
+
+                            <li>
+                                Expert en explosif
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="theory-question">
+
+                        <h3>
+                            8. Pourquoi les RC n’aiment-ils pas forcément
+                            les Jedi et citez-moi-en un ? (X/2)
+                        </h3>
+
+                        <ul>
+
+                            <li>
+                                Perte de nombreux RC lors de la
+                                première bataille de Géonosis
+                            </li>
+
+                            <li>
+                                Mace Windu
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="theory-question">
+
+                        <h3>
+                            9. Présentez au minimum 3 valeurs
+                            mandaloriennes inculquées par les instructeurs
+                            Cuy’Val Dar aux Republic Commandos ?
+                            (X/3) +1 bonus
+                        </h3>
+
+                        <ul>
+
+                            <li>
+                                Défendre sa famille et son clan.
+                            </li>
+
+                            <li>
+                                Parler le Mando’a.
+                            </li>
+
+                            <li>
+                                Porter l’armure.
+                            </li>
+
+                        </ul>
+
+
+                        <h4>
+                            ⭐ Bonus
+                        </h4>
+
+                        <ul>
+
+                            <li>
+                                Contribuer au bien-être de son clan
+                                et à sa prospérité.
+                            </li>
+
+                            <li>
+                                Répondre à l’appel du chef suprême
+                                (le Mandalore).
+                            </li>
+
+                            <li>
+                                Élever son enfant dans les traditions
+                                mandaloriennes.
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div class="theory-question">
+
+                        <h3>
+                            10. Donnez-moi les 3 grandes batailles des RC
+                            et précisez ce qui s'est passé ? (X/6)
+                        </h3>
+
+                        <ul>
+
+                            <li>
+
+                                <strong>
+                                    Géonosis
+                                </strong>
+
+                                — lancement de la guerre,
+                                énorme perte d’environ 3 000 commandos.
+
+                            </li>
+
+                            <li>
+
+                                <strong>
+                                    Kamino
+                                </strong>
+
+                                — défense de la planète natale,
+                                les RC sont en défense de la cuve
+                                à clonage.
+
+                            </li>
+
+                            <li>
+
+                                <strong>
+                                    Kashyyyk
+                                </strong>
+
+                                — aide aux Wookies pour la défense
+                                avec Maître Yoda.
+                                L’Ordre 66 est déclenché.
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <!-- ========================= -->
+                    <!-- TOTAL -->
+                    <!-- ========================= -->
+
+                    <div class="result">
+
+                        Total :
+                        <strong>
+                            31 points
+                        </strong>
+
+                        <br>
+
+                        ⭐ Bonus :
+                        <strong>
+                            +1 point
+                        </strong>
+
+                    </div>
+
+                `
+
+            },
+
+
+            /* ================================= */
+            /* 212TH */
+            /* ================================= */
+
+            "212th": {
+
+                titre:
+                    "Épreuve théorique — 212th",
+
+                contenu: `
+
+                    <div class="theory-question">
+
+                        <h3>
+                            Épreuve du 212th
+                        </h3>
+
+                        <p>
+                            Les questions du 212th seront ajoutées ici.
+                        </p>
+
+                    </div>
+
+                `
+
+            },
+
+
+            /* ================================= */
+            /* 104TH */
+            /* ================================= */
+
+            "104th": {
+
+                titre:
+                    "Épreuve théorique — 104th",
+
+                contenu: `
+
+                    <div class="theory-question">
+
+                        <h3>
+                            Épreuve du 104th
+                        </h3>
+
+                        <p>
+                            Les questions du 104th seront ajoutées ici.
+                        </p>
+
+                    </div>
+
+                `
+
+            }
+
+        };
+
+
+        /* ===================================== */
+        /* AFFICHAGE */
+        /* ===================================== */
+
+
+        const select =
+            document.getElementById(
+                "regimentSelect"
+            );
+
+
+        const epreuve =
+            document.getElementById(
+                "epreuve"
+            );
+
+
+        function afficherTheorie() {
+
+
+            const regiment =
+                select.value;
+
+
+            const data =
+                THEORIQUE[regiment];
+
+
+            if (!data) {
+
+                return;
+
+            }
+
+
+            epreuve.innerHTML = `
+
+                <h2>
+
+                    ${data.titre}
+
+                </h2>
+
+                ${data.contenu}
+
+            `;
+
+        }
+
+
+        /* ===================================== */
+        /* CHANGEMENT DE RÉGIMENT */
+        /* ===================================== */
+
+
+        select.addEventListener(
+            "change",
+            afficherTheorie
+        );
+
+
+        /* ===================================== */
+        /* AFFICHAGE INITIAL */
+        /* ===================================== */
+
+
+        afficherTheorie();
+
+
+    </script>
 
 
 </body>
