@@ -20,8 +20,15 @@ function q(id){return document.getElementById(id)}
 function fillSelect(s){if(!s)return;Object.keys(REGIMENTS).forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;s.appendChild(o)})}
 function renderConstruction(){
  const s=q("regimentSelect"),l=q("constructionList"),t=q("selectedRegiment");if(!s||!l)return;
- l.innerHTML="";let n=s.value;if(!n){t.textContent="Aucun régiment sélectionné";return}t.textContent=n;
- REGIMENTS[n].constructions.forEach((c,i)=>{let e=document.createElement("div");e.className="item";e.innerHTML="<strong>Construction "+(i+1)+"</strong><br><span class='muted'>"+esc(c)+"</span>";l.appendChild(e)})
+e.innerHTML = `
+    <strong>Construction ${i+1}</strong>
+    <br>
+    <span class="muted">${esc(c)}</span>
+    <br><br>
+    <button onclick="downloadFile('${esc(c)}')">
+        ⬇️ Télécharger
+    </button>
+`;
 }
 function renderNotation(){
  const s=q("regimentSelect"),l=q("criteriaList"),t=q("selectedRegiment"),f=q("finalScore");if(!s||!l)return;
